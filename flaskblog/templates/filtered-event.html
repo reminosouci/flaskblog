@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST" action="" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Search Event</legend>
+        <div class="form-group">
+            {{ form.interest.label(class="form-control-label") }}
+
+            {% if form.interest.errors %}
+                {{ form.interest(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.interest.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.interest(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.accept.label(class="form-control-label") }}
+            {% if form.accept.errors %}
+                {{ form.accept(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.accept.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.accept(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.need_cover.label(class="form-control-label") }}
+            {% if form.need_cover.errors %}
+                {{ form.need_cover(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.need_cover.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.need_cover(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.startdate.label(class="form-control-label") }}<br>
+            {% if form.startdate.errors %}
+                {{ form.startdate(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.startdate.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.startdate(class='datepicker') }}
+            {% endif %}
+        </div>
+    <div class="form-group">
+            {{ form.enddate.label(class="form-control-label") }}<br>
+            {% if form.enddate.errors %}
+                {{ form.enddate(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.enddate.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.enddate(class='datepicker') }}
+            {% endif %}
+        </div>
+    <div class="form-group">
+            {{ form.search_text.label(class="form-control-label") }}<br>
+            {% if form.search_text.errors %}
+                {{ form.search_text(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.search_text.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.search_text(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+
+    </fieldset>
+<div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+
+</form>
+{% endblock content %}

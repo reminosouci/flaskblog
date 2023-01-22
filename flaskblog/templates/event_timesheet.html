@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img"
+             src="{{ url_for('static', filename='profile_pics/' + event.organizer.picture) }}">
+        <div class="media-body">
+            <div class="article-metadata">
+                <div class="row">
+                    <div class="col-6"><a class="mr-2"
+                                          href="{{ url_for('users.user_events', username=event.organizer.company_name) }}">{{ event.organizer.company_name }}</a>
+                    </div>
+                    <div class="col-6"><span class="float-right"><small
+                            class="text-muted ">posted on : {{ event.date_posted.strftime('%Y-%m-%d') }}</small></span>
+                    </div>
+                </div>
+            </div>
+            <h2 class="article-title">{{ event.title }}</h2>
+            <p class="article-content"><i aria-hidden="true" class="fa fa-map-marker"></i> {{ event.address }}</p>
+            <p><i aria-hidden="true" class="fa fa-calendar"></i> {{ event.text_start_end_datetime }}</p>
+            {% if event.note_event != "" %}
+                <p><i aria-hidden="true" class="fa fa-pencil-square-o"></i>
+                    {{ event.note_event }}</p>
+            {% endif %}
+            <p><i aria-hidden="true" class="fa fa-users"></i> {{ event.get_accepted_workers|length }} /
+                {{ event.max_workers_needed }}{% if event.get_need_cover_workers|length != 0 %} ,
+                    {{ event.get_need_cover_workers|length }} looking for cover{% endif %}
+                {% if event.interested_workers|length != 0 %}
+                    , {{ event.interested_workers|length }} interested{% endif %}</p>
+            {% if worker_events|length != 0 %}
+                <form action="{{ url_for('events.event_time_sheet', event_id=event.id) }}" method="post">
+                    <div class="accordion" id="workereventAccordion">
+                        {% for worker_event in worker_events %}
+                            <div class="card">
+                                <div class="card-header" id="HeadingWorkerAccepted{{ loop.index }}">
+                                    <div class="mb-0">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <button aria-controls="workereventcollapse{{ loop.index }}"
+                                                        aria-expanded="true"
+                                                        class="btn btn-link btn-block text-left"
+                                                        data-target="#workereventcollapse{{ loop.index }}"
+                                                        data-toggle="collapse"
+                                                        type="button">
+                                                <span><i aria-hidden="true"
+                                                         class="fa fa-user"></i> {{ worker_event.worker.name }}
+                                                </span>
+                                                </button>
+                                                <label for="clock_in_{{ worker_event.worker.id }}">Clock In:</label>
+                                                <input type="datetime-local"
+                                                       name="clock_in_{{ worker_event.worker.id }}"
+                                                       value="{{ worker_event.event.startdatetime if worker_event.clock_in_organizer == None else worker_event.clock_in_organizer }}"
+                                                       required>
+                                                <br>
+                                                <label for="clock_out_{{ worker_event.worker.id }}">Clock Out:</label>
+                                                <input type="datetime-local"
+                                                       name="clock_out_{{ worker_event.worker.id }}"
+                                                       value="{{ worker_event.event.enddatetime if worker_event.clock_out_organizer == None else worker_event.clock_out_organizer }}"
+                                                       required>
+                                                <br>
+                                                <label for="review_{{ worker_event.worker.id }}">Review:</label>
+                                                <input type="range" class="form-range" id="slider"
+                                                       name="review_{{ worker_event.worker.id }}"
+                                                       value="{{ 5  if worker_event.review == None else worker_event.review }}"
+                                                       min="0" max="5"
+                                                       required>
+                                                <span class="range-value"> {{ 5 if worker_event.review == None else worker_event.review }}
+                                                </span> <i class="fas fa-star"></i>
+                                            </div>
+                                            <div class="col text-right">
+                                                <button aria-controls="workereventcollapse{{ loop.index }}"
+                                                        aria-expanded="true"
+                                                        class="btn btn-link btn-block text-right"
+                                                        data-target="#workereventcollapse{{ loop.index }}"
+                                                        data-toggle="collapse"
+                                                        type="button">
+                                                    <i aria-hidden="true" class="fa fa-chevron-down"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div aria-labelledby="HeadingWorkerAccepted{{ loop.index }}" class="collapse"
+                                     data-parent="#workereventAccordion"
+                                     id="workereventcollapse{{ loop.index }}">
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <div class="row mt-4">
+                                                <div class="col-5">
+                                                    <img class="rounded-circle account-img"
+                                                         src="{{ url_for('static', filename='profile_pics/' + worker_event.worker.picture) }}">
+                                                </div>
+                                                <div class="col-7">
+                                                    <h5>{{ worker_event.worker.name }}</h5>
+                                                    <h5>{{ worker_event.worker.age }} y</h5>
+                                                    {% if worker_event.event.organizer.user ==
+                                    current_user %}{{ worker_event.worker.get_star_html | safe }}{% endif %}
+                                                    <h5>{{ worker_event.worker.note }}</h5>
+                                                    <!-- Add other worker information here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit Timesheet" class="btn btn-primary">
+
+                    </div>
+                </form>
+            {% endif %}
+            <br>
+            {{ event.get_google_map_iframe | safe }}
+        </div>
+    </article>
+    <script>
+        window.onload = function () {
+            let rangeInputs = document.querySelectorAll('.form-range');
+            let rangeValues = document.querySelectorAll('.range-value');
+            for (let i = 0; i < rangeInputs.length; i++) {
+                rangeInputs[i].addEventListener('input', function () {
+                    rangeValues[i].textContent = this.value;
+                });
+            }
+        };
+    </script>
+{% endblock content %}

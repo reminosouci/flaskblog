@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for worker_event in worker_events.items %}
+        <div class="event">
+            <h2>{{ worker_event }}</h2>
+            <h2>{{ worker_event.event.title }}</h2>
+            <p>{{ worker_event.event.description }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

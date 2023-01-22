@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                firstDay: 1,
+                headerToolbar: {right: 'prev,next'},
+                initialView: 'dayGridMonth',
+                allDaySlot: false,
+                footerToolbar: {center: 'listMonth,timeGridWeek,dayGridMonth'},
+                views: {timeGridWeek: {dayHeaderFormat: {weekday: 'short'}}},
+                aspectRatio: 1,
+                titleFormat: {year: '2-digit', month: 'short', day: '2-digit'},
+                dateClick: function (info) {
+                    if (calendar.view = 'dayGridMonth') {
+                        calendar.changeView('timeGridWeek', info.dateStr);
+                    } else {
+                        calendar.changeView('dayGridMonth', info.dateStr);
+                    }
+                },
+                events: [
+                    {% for worker_event in worker_events %}
+                        {
+                            title: '{{worker_event.event.title }}',
+                            start: '{{worker_event.event.startdatetime.strftime("%Y-%m-%dT%H:%M:%S")}}',
+                            end: '{{worker_event.event.enddatetime.strftime("%Y-%m-%dT%H:%M:%S")}}',
+                            {% if worker_event.state == 'request cover' %}
+                                color: 'blue',
+                            {% elif worker_event.state == 'accept' %}
+                                color: 'green',
+                            {% else %}
+                                color: 'red',
+                            {% endif %}
+                            url: 'event/{{worker_event.event.id}}'
+                        },
+                    {% endfor %}
+                ],
+                eventContent: function (info) {
+                    return {html: info.event.title};
+                },
+                eventDisplay: 'block'
+            });
+            calendar.render();
+        });
+    </script>
+    <div class="calendar-presentation">
+        <h2><a class="article-title">Calendar</a></h2>
+        <div id='calendar'></div>
+
+
+    </div>
+
+{% endblock content %}

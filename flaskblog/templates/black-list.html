@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="accordion" id="workerAccordion">
+        {% for worker in workers.items %}
+            <div class="card">
+                <div class="card-header" id="heading{{ loop.index }}" data-worker-id="{{ worker.id }}">
+                    <h2 class="mb-0">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                        data-target="#collapse{{ loop.index }}" aria-expanded="true"
+                                        aria-controls="collapse{{ loop.index }}">
+                                    {{ worker.user.username }}
+                                </button>
+                            </div>
+                            <div class="col text-right">
+
+                                {% if worker in current_user.organizer.workers_blacklisted %}
+                                    <input class="form-check-input" type="checkbox" name="inlineCheckbox"
+                                           id="inlineCheckbox{{ loop.index }}" value="add" checked
+                                           data-worker-id="{{ worker.id }}">
+                                {% else %}
+                                    <input class="form-check-input" type="checkbox" name="inlineCheckbox"
+                                           id="inlineCheckbox{{ loop.index }}" value="add"
+                                           data-worker-id="{{ worker.id }}">
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </h2>
+                </div>
+
+                <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}"
+                     data-parent="#workerAccordion">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row mt-4">
+                                <div class="col-5">
+                                    <img class="rounded-circle account-img"
+                                         src="{{ url_for('static', filename='profile_pics/' + worker.picture) }}">
+                                </div>
+                                <div class="col-7">
+                                    <h5>{{ worker.name }}</h5>
+                                    <h5>{{ worker.age }} y</h5>
+                                    <h5>{{ worker.get_star_html | safe }}</h5>
+                                    <h5>{{ worker.note }}</h5>
+                                    <!-- Add other worker information here -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <div class="pagination">
+        {% for page_num in workers.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if workers.page == page_num %}
+                    <a class="btn btn-info mb-4"
+                       href="{{ url_for('users.black_list', page=page_num) }}">{{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-info mb-4"
+                       href="{{ url_for('users.black_list', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+    <script>
+
+        document.addEventListener('change', function (event) {
+            if (event.target.tagName === 'INPUT' && event.target.type === 'checkbox') {
+                var accordionHeader = event.target.closest('.card-header');
+                var workerId = accordionHeader.getAttribute('data-worker-id');
+                var blacklistValue = event.target.checked ? 'add' : 'remove';
+
+                // Make a POST request to your route using fetch()
+                fetch('/black-list', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        workerId: workerId,
+                        blacklistValue: blacklistValue
+                    })
+                })
+                    .then(function (response) {
+                        // Handle the response here
+                    })
+                    .catch(function (error) {
+                        // Handle the error here
+                    });
+            }
+        });
+
+    </script>
+
+{% endblock content %}

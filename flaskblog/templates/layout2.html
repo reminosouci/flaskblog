@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Carousel Template · Bootstrap v5.3</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <!--my css-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main2.css') }}">
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/332e4b120d.js" crossorigin="anonymous"></script>
+</head>
+
+
+<body>
+<header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Disabled</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users.register') }}">Register</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Hello, world!</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called a
+                jumbotron and three supporting pieces of content. Use it as a starting point to create something more
+                unique.</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+            <article class="media content-section">
+            <div class="col-md-4">
+                <h2>Connecting Event Organizers with our Team Members</h2>
+                <p>Are you a worker looking for your next gig? Or an organizer in need of a team? Our platform connects
+                    you with a variety of events happening near you. Browse through our list of upcoming events and find
+                    the perfect fit for you. From corporate events to music festivals, we have something for everyone.
+                    Click here to see our list of events and start your journey today.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+            </article>
+            <div class="col-md-4">
+                <h2>Streamline your event planning process</h2>
+                <p>Our platform makes it easy for event organizers to plan and manage their events. With features such
+                    as creating and updating events, adding workers, and tracking worker attendance, you can focus on
+                    making your event a success instead of worrying about the logistics. Our intuitive user interface
+                    and streamlined process makes it easy for you to find the right workers for your event and ensure
+                    everything runs smoothly.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>The security and reliability of the platform</h2>
+                <p>Our platform prioritizes security and reliability to ensure your event planning process is seamless.
+                    We use advanced encryption and strict protocols to protect your data and limit access to authorized
+                    users. Additionally, our enterprise-grade infrastructure guarantees the platform is always running
+                    and any issues are promptly resolved by our dedicated team.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            </div>
+        </div>
+
+        <hr>
+
+    </div> <!-- /container -->
+
+</main>
+
+<footer class="container">
+    <p>&copy; Company 2017-2022</p>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

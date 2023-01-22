@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for event in events.items %}
+        <article class="media content-section">
+            <img class="rounded-circle article-img"
+                 src="{{ url_for('static', filename='profile_pics/' + event.organizer.picture) }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2"
+                       href="{{ url_for('users.user_events', username=event.organizer.user.username) }}">{{ event.organizer.company_name }}</a>
+                    <small class="text-muted">{{ event.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <h2><a class="article-title"
+                       href="{{ url_for('events.event', event_id=event.id) }}">{{ event.title }}</a></h2>
+                <p class="article-content"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ event.address }}</p>
+                <p><i class="fa fa-calendar" aria-hidden="true"></i> {{ event.text_start_end_datetime }}</p>
+
+                {% if event.note_event != "" %}
+                    <p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        {{ event.note_event }}</p>
+                {% endif %}
+                <p><i class="fa fa-users" aria-hidden="true"></i>
+                    {{ event.get_accepted_workers|length }} / {{ event.max_workers_needed }}
+                    {% if event.get_need_cover_workers|length != 0 %} , {{ event.get_need_cover_workers|length }}
+                        looking for cover{% endif %} {% if event.interested_workers|length != 0 %}
+                        , {{ event.interested_workers|length }} interested{% endif %}</p>
+            </div>
+        </article>
+    {% endfor %}
+    {% for page_num in events.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if events.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

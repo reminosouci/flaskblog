@@ -1,0 +1,256 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <img class="rounded-circle article-img"
+             src="{{ url_for('static', filename='profile_pics/' + event.organizer.picture) }}">
+        <div class="media-body">
+            <div class="article-metadata">
+                <div class="row">
+                    <div class="col-6"><a class="mr-2"
+                                          href="{{ url_for('users.user_events', username=event.organizer.company_name) }}">{{ event.organizer.company_name }}</a>
+                    </div>
+                    <div class="col-6"><span class="float-right"><small
+                            class="text-muted ">posted on : {{ event.date_posted.strftime('%d/%m/%y') }}</small></span>
+                    </div>
+                </div>
+
+
+
+
+                {% if event.organizer.user == current_user and not event.start_time_passed %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                           href="{{ url_for('events.update_event', event_id=event.id) }}">Update</a>
+                        <button class="btn btn-danger btn-sm m-1" data-target="#deleteModal" data-toggle="modal"
+                                type="button">
+                            Delete
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="article-title">{{ event.title }}</h2>
+            <p class="article-content"><i aria-hidden="true" class="fa fa-map-marker"></i> {{ event.address }}</p>
+            <p><i aria-hidden="true" class="fa fa-calendar"></i> {{ event.text_start_end_datetime }}</p>
+
+            {% if event.note_event != "" %}
+                <p><i aria-hidden="true" class="fa fa-pencil-square-o"></i>
+                    {{ event.note_event }}</p>
+            {% endif %}
+            <p><i aria-hidden="true" class="fa fa-users"></i> {{ event.get_accepted_workers|length }} /
+                {{ event.max_workers_needed }}{% if event.get_need_cover_workers|length != 0 %} ,
+                    {{ event.get_need_cover_workers|length }} looking for cover{% endif %} {% if event.interested_workers|length !=
+            0 %}
+                    , {{ event.interested_workers|length }} interested{% endif %}</p>
+
+            {% if event.get_accepted_workers|length != 0 %}
+                <div class="accordion" id="workerAcceptedAccordion">
+                    {% for worker in event.get_accepted_workers %}
+                        <div class="card">
+                            <div class="card-header" id="HeadingWorkerAccepted{{ loop.index }}">
+                                <h2 class="mb-0">
+                                    <div class="row">
+                                        <div class="col">
+                                            <button aria-controls="workerAcceptedcollapse{{ loop.index }}"
+                                                    aria-expanded="true"
+                                                    class="btn btn-link btn-block text-left"
+                                                    data-target="#workerAcceptedcollapse{{ loop.index }}"
+                                                    data-toggle="collapse"
+                                                    type="button">
+                                                <p><i aria-hidden="true" class="fa fa-user"></i> {{ worker.name }} </i>
+                                                </p>
+                                            </button>
+                                        </div>
+                                        <div class="col text-right">
+                                            <button aria-controls="workerAcceptedcollapse{{ loop.index }}"
+                                                    aria-expanded="true"
+                                                    class="btn btn-link btn-block text-right"
+                                                    data-target="#workerAcceptedcollapse{{ loop.index }}"
+                                                    data-toggle="collapse"
+                                                    type="button">
+                                                <i aria-hidden="true" class="fa fa-chevron-down"></i>
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </h2>
+                            </div>
+                            <div aria-labelledby="HeadingWorkerAccepted{{ loop.index }}" class="collapse"
+                                 data-parent="#workerAcceptedAccordion"
+                                 id="workerAcceptedcollapse{{ loop.index }}">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row mt-4">
+                                            <div class="col-5">
+                                                <img class="rounded-circle account-img"
+                                                     src="{{ url_for('static', filename='profile_pics/' + worker.picture) }}">
+                                            </div>
+                                            <div class="col-7">
+                                                <h5>{{ worker.name }}</h5>
+                                                <h5>{{ worker.age }} y</h5>
+                                                {% if event.organizer.user ==
+                                    current_user %}{{ worker.get_star_html | safe }}{% endif %}
+                                                <h5>{{ worker.note }}</h5>
+                                                <!-- Add other worker information here -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if event.get_need_cover_workers|length != 0 %}
+                <div class="accordion" id="workerNeedCoverAccordion">
+                    {% for worker in event.get_need_cover_workers %}
+                        <div class="card">
+                            <div class="card-header" id="HeadingWorkerNeedCover{{ loop.index }}">
+                                <h2 class="mb-0">
+                                    <div class="row">
+                                        <div class="col">
+                                            <button aria-controls="workerNeedCovercollapse{{ loop.index }}"
+                                                    aria-expanded="true"
+                                                    class="btn btn-link btn-block text-left"
+                                                    data-target="#workerNeedCovercollapse{{ loop.index }}"
+                                                    data-toggle="collapse"
+                                                    type="button">
+                                                <p><i aria-hidden="true"
+                                                      class="fa fa-bullhorn"></i> {{ worker.name }} </i>
+                                                </p>
+                                            </button>
+                                        </div>
+                                        <div class="col text-right">
+                                            <button aria-controls="workerNeedCovercollapse{{ loop.index }}"
+                                                    aria-expanded="true"
+                                                    class="btn btn-link btn-block text-right"
+                                                    data-target="#workerNeedCovercollapse{{ loop.index }}"
+                                                    data-toggle="collapse"
+                                                    type="button">
+                                                <i aria-hidden="true" class="fa fa-chevron-down"></i>
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </h2>
+                            </div>
+                            <div aria-labelledby="HeadingWorkerNeedCover{{ loop.index }}" class="collapse"
+                                 data-parent="#workerNeedCoverAccordion"
+                                 id="workerNeedCovercollapse{{ loop.index }}">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row mt-4">
+                                            <div class="col-5">
+                                                <img class="rounded-circle account-img"
+                                                     src="{{ url_for('static', filename='profile_pics/' + worker.picture) }}">
+                                            </div>
+                                            <div class="col-7">
+                                                <h5>{{ worker.name }}</h5>
+                                                <h5>{{ worker.age }} y</h5>
+                                                {% if event.organizer.user == current_user %}
+                                                    {{ worker.get_star_html | safe }}{% endif %}
+                                                <h5>{{ worker.note }}</h5>
+                                                <form action="" method="post">
+                                                    <i aria-hidden="true"
+                                                       class="fa fa-bullhorn"></i> {{ worker.user.username }}
+                                                    {% if not current_user.worker in event.get_need_cover_workers and (not current_user.organizer) %}
+                                                        <button class="btn btn-primary" type="submit">Accept Cover
+                                                            Request
+                                                        </button>
+                                                    {% endif %}
+                                                </form>
+                                                <!-- Add other worker information here -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if current_user.worker %}
+                {% if event.available != 0 %}
+                    {% if not current_user.worker in event.get_accepted_workers and (not current_user.worker in event.get_need_cover_workers) %}
+                        <p>
+                        <form action="{{ url_for('events.accept_event', event_id=event.id) }}" method="POST">
+                            <button class="btn btn-primary" type="submit">Accept Shift</button>
+                        </form>
+                        </p>
+                    {% endif %}
+
+
+                    {% if current_user.worker in event.get_need_cover_workers %}
+                        <p>
+                        <form action="{{ url_for('events.cancel_cover_event', event_id=event.id) }}" method="POST">
+                            <button class="btn btn-primary" type="submit">Cancel for Cover and Accept the Shift</button>
+                        </form>
+                        </p>
+                    {% endif %}
+                {% endif %}
+
+
+                {% if current_user.worker in event.get_accepted_workers %}
+                    <p>
+                    <form action="{{ url_for('events.ask_cover_event', event_id=event.id) }}" method="POST">
+                        <button class="btn btn-primary" type="submit">Ask for Cover</button>
+                    </form>
+                    </p>
+                {% endif %}
+
+
+                <form action="{{ url_for('events.update_interest_status', event_id=event.id) }}" method="POST">
+                    {% if current_user.worker in event.get_interested_workers and not (current_user.worker in event.get_accepted_workers or current_user.worker in event.get_accepted_workers) %}
+                        <button name="interest_status" type="submit" value="remove" style="font-family: FontAwesome"
+                                class="hidden_button">
+                            <i class="fa fa-heart" style="color:red"></i>
+                        </button>
+                    {% endif %}
+                    {% if not(current_user.worker in event.get_interested_workers) and not (current_user.worker in event.get_accepted_workers or current_user.worker in event.get_accepted_workers) %}
+                        <button name="interest_status" type="submit" value="add" style="font-family: FontAwesome"
+                                class="hidden_button">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    {% endif %}
+                </form>
+
+
+            {% endif %}
+            </address>
+            <br>
+            {{ event.get_google_map_iframe | safe }}
+        </div>
+
+
+    </article>
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="deleteModalLabel" class="modal fade" id="deleteModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Event?</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <form action="{{ url_for('events.delete_event', event_id=event.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+
+
